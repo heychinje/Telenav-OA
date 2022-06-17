@@ -24,5 +24,7 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "Telenav OA"
+rootProject.name = "TelenavOA"
 include ':app'
+include ':core-ui'
+include ':core-navigation'

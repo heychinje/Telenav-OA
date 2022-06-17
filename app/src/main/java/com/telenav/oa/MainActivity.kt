@@ -1,14 +1,13 @@
-package com.telenav.telenavoa
+package com.telenav.oa
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import com.telenav.telenavoa.ui.theme.TelenavOATheme
+import com.telenav.oa.ui.theme.TelenavOATheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

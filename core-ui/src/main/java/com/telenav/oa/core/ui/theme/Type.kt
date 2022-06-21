@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
  *
  * TODO: Add custom font
  */
-val NiaTypography = Typography(
+val TelenavOaTypography = Typography(
     displayLarge = TextStyle(
         fontWeight = FontWeight.W400,
         fontSize = 57.sp,

@@ -189,7 +189,7 @@ fun TelenavOATheme(
     CompositionLocalProvider(LocalBackgroundTheme provides backgroundTheme) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = NiaTypography,
+            typography = TelenavOaTypography,
             content = content
         )
     }

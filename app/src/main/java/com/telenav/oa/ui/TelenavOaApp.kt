@@ -6,20 +6,29 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.telenav.oa.Greeting
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.telenav.oa.navigation.TelenavOaTopLevelNavigation
+import com.telenav.oa.navigation.TOP_LEVEL_DESTINATIONS
+import com.telenav.oa.navigation.TopLevelDestination
 import com.telenav.oa.core.ui.theme.TelenavOATheme
+import com.telenav.oa.navigation.TelenavOaNavHost
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun TelenavOaApp(windowSizeClass: WindowSizeClass) {
     TelenavOATheme {
         val navController = rememberNavController()
-        val niaTopLevelNavigation = remember(navController) {
-            NiaTopLevelNavigation(navController)
+        val telenavOaTopLevelNavigation = remember(navController) {
+            TelenavOaTopLevelNavigation(navController)
         }
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -31,8 +40,8 @@ fun TelenavOaApp(windowSizeClass: WindowSizeClass) {
             contentColor = MaterialTheme.colorScheme.onBackground,
             bottomBar = {
                 if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
-                    NiaBottomBar(
-                        onNavigateToTopLevelDestination = niaTopLevelNavigation::navigateTo,
+                    TelenavOaBottomBar(
+                        onNavigateToTopLevelDestination = telenavOaTopLevelNavigation::navigateTo,
                         currentDestination = currentDestination
                     )
                 }
@@ -48,14 +57,14 @@ fun TelenavOaApp(windowSizeClass: WindowSizeClass) {
                     )
             ) {
                 if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
-                    NiaNavRail(
-                        onNavigateToTopLevelDestination = niaTopLevelNavigation::navigateTo,
+                    TelenavOaNavRail(
+                        onNavigateToTopLevelDestination = telenavOaTopLevelNavigation::navigateTo,
                         currentDestination = currentDestination,
                         modifier = Modifier.safeDrawingPadding()
                     )
                 }
 
-                NiaNavHost(
+                TelenavOaNavHost(
                     windowSizeClass = windowSizeClass,
                     navController = navController,
                     modifier = Modifier
@@ -68,7 +77,7 @@ fun TelenavOaApp(windowSizeClass: WindowSizeClass) {
 }
 
 @Composable
-private fun NiaBottomBar(
+private fun TelenavOaBottomBar(
     onNavigateToTopLevelDestination: (TopLevelDestination) -> Unit,
     currentDestination: NavDestination?
 ) {
@@ -103,6 +112,31 @@ private fun NiaBottomBar(
                     label = { Text(stringResource(destination.iconTextId)) }
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun TelenavOaNavRail(
+    onNavigateToTopLevelDestination: (TopLevelDestination) -> Unit,
+    currentDestination: NavDestination?,
+    modifier: Modifier = Modifier,
+) {
+    NavigationRail(modifier = modifier) {
+        TOP_LEVEL_DESTINATIONS.forEach { destination ->
+            val selected =
+                currentDestination?.hierarchy?.any { it.route == destination.route } == true
+            NavigationRailItem(
+                selected = selected,
+                onClick = { onNavigateToTopLevelDestination(destination) },
+                icon = {
+                    Icon(
+                        if (selected) destination.selectedIcon else destination.unselectedIcon,
+                        contentDescription = null
+                    )
+                },
+                label = { Text(stringResource(destination.iconTextId)) }
+            )
         }
     }
 }
